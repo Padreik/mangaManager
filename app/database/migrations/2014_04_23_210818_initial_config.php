@@ -22,7 +22,7 @@ class InitialConfig extends Migration {
             
             $table->date('loan_date');
             $table->boolean('is_a_return');
-            $table->int('borrower_id')->unsigned();
+            $table->integer('borrower_id')->unsigned();
             
             $table->timestamps();
             
@@ -64,14 +64,14 @@ class InitialConfig extends Migration {
             
             $table->string('name');
             $table->string('original_name');
-            $table->int('author_id');
-            $table->int('artist_id');
-            $table->int('type_id');
-            $table->int('edition_id');
-            $table->int('country_id');
-            $table->int('number_of_volumes');
-            $table->int('number_of_original_volumes');
-            $table->int('recommended_age');
+            $table->integer('author_id');
+            $table->integer('artist_id');
+            $table->integer('type_id');
+            $table->integer('edition_id');
+            $table->integer('country_id');
+            $table->integer('number_of_volumes');
+            $table->integer('number_of_original_volumes');
+            $table->integer('recommended_age');
             $table->string('image');
             
             $table->timestamps();
@@ -80,10 +80,10 @@ class InitialConfig extends Migration {
         Schema::create('mangas', function($table) {
             $table->increments('id');
             
-            $table->int('series_id');
-            $table->int('number');
+            $table->integer('series_id')->unsigned();
+            $table->integer('number');
             $table->date('parution');
-            $table->int('pages');
+            $table->integer('pages');
             $table->string('ean');
             $table->text('summary');
             $table->string('image');
@@ -95,8 +95,8 @@ class InitialConfig extends Migration {
         
         Schema::create('genre_series', function($table) {
             $table->increments('id');
-            $table->int('series_id')->unsigned();
-            $table->int('genre_id')->unsigned();
+            $table->integer('series_id')->unsigned();
+            $table->integer('genre_id')->unsigned();
             $table->timestamps();
             $table->foreign('series_id')->references('id')->on('series');
             $table->foreign('genre_id')->references('id')->on('genres');
@@ -104,8 +104,8 @@ class InitialConfig extends Migration {
         
         Schema::create('author_series', function($table) {
             $table->increments('id');
-            $table->int('series_id')->unsigned();
-            $table->int('author_id')->unsigned();
+            $table->integer('series_id')->unsigned();
+            $table->integer('author_id')->unsigned();
             $table->boolean('author');
             $table->boolean('artist');
             $table->timestamps();
@@ -115,26 +115,26 @@ class InitialConfig extends Migration {
         
         Schema::create('series_type', function($table) {
             $table->increments('id');
-            $table->int('series_id')->unsigned();
-            $table->int('type_id')->unsigned();
+            $table->integer('series_id')->unsigned();
+            $table->integer('type_id')->unsigned();
             $table->timestamps();
             $table->foreign('series_id')->references('id')->on('series');
             $table->foreign('type_id')->references('id')->on('types');
         });
         
-        Schema::create('edition_series', function($table) {
+        Schema::create('editor_series', function($table) {
             $table->increments('id');
-            $table->int('series_id')->unsigned();
-            $table->int('edition_id')->unsigned();
+            $table->integer('series_id')->unsigned();
+            $table->integer('editor_id')->unsigned();
             $table->timestamps();
             $table->foreign('series_id')->references('id')->on('series');
-            $table->foreign('edition_id')->references('id')->on('editions');
+            $table->foreign('editor_id')->references('id')->on('editors');
         });
         
         Schema::create('country_series', function($table) {
             $table->increments('id');
-            $table->int('series_id')->unsigned();
-            $table->int('country_id')->unsigned();
+            $table->integer('series_id')->unsigned();
+            $table->integer('country_id')->unsigned();
             $table->timestamps();
             $table->foreign('series_id')->references('id')->on('series');
             $table->foreign('country_id')->references('id')->on('countries');
@@ -142,8 +142,8 @@ class InitialConfig extends Migration {
         
         Schema::create('loan_manga', function($table) {
             $table->increments('id');
-            $table->int('loan_id')->unsigned();
-            $table->int('manga_id')->unsigned();
+            $table->integer('loan_id')->unsigned();
+            $table->integer('manga_id')->unsigned();
             $table->timestamps();
             $table->foreign('loan_id')->references('id')->on('loans');
             $table->foreign('manga_id')->references('id')->on('mangas');
@@ -168,7 +168,7 @@ class InitialConfig extends Migration {
         Schema::drop('genre_series');
         Schema::drop('author_series');
         Schema::drop('series_type');
-        Schema::drop('edition_series');
+        Schema::drop('editor_series');
         Schema::drop('country_series');
         Schema::drop('loan_manga');
     }
