@@ -39,7 +39,7 @@ return array(
 	|
 	*/
 
-	'timezone' => 'UTC',
+	'timezone' => 'America/Montreal',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -52,7 +52,7 @@ return array(
 	|
 	*/
 
-	'locale' => 'en',
+	'locale' => 'fr-CA',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -119,6 +119,8 @@ return array(
 		'Illuminate\Validation\ValidationServiceProvider',
 		'Illuminate\View\ViewServiceProvider',
 		'Illuminate\Workbench\WorkbenchServiceProvider',
+                'Yangqi\Htmldom\HtmldomServiceProvider',
+                'AdamWathan\BootForms\BootFormsServiceProvider',
 
 	),
 
@@ -185,6 +187,8 @@ return array(
 		'URL'             => 'Illuminate\Support\Facades\URL',
 		'Validator'       => 'Illuminate\Support\Facades\Validator',
 		'View'            => 'Illuminate\Support\Facades\View',
+                'Htmldom'         => 'Yangqi\Htmldom\Htmldom',
+                'BootForm'        => 'AdamWathan\BootForms\Facades\BootForm',
 
 	),
 
