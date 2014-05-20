@@ -156,6 +156,37 @@ class InitialConfig extends Migration {
      * @return void
      */
     public function down() {
+        Schema::table('loans', function($table) {
+            $table->dropForeign('loans_borrower_id_foreign');
+        });
+        Schema::table('mangas', function($table) {
+            $table->dropForeign('mangas_series_id_foreign');
+        });
+        Schema::table('genre_series', function($table) {
+            $table->dropForeign('genre_series_series_id_foreign');
+            $table->dropForeign('genre_series_genre_id_foreign');
+        });
+        Schema::table('author_series', function($table) {
+            $table->dropForeign('author_series_series_id_foreign');
+            $table->dropForeign('author_series_author_id_foreign');
+        });
+        Schema::table('series_type', function($table) {
+            $table->dropForeign('series_type_series_id_foreign');
+            $table->dropForeign('series_type_type_id_foreign');
+        });
+        Schema::table('editor_series', function($table) {
+            $table->dropForeign('editor_series_series_id_foreign');
+            $table->dropForeign('editor_series_editor_id_foreign');
+        });
+        Schema::table('country_series', function($table) {
+            $table->dropForeign('country_series_series_id_foreign');
+            $table->dropForeign('country_series_country_id_foreign');
+        });
+        Schema::table('loan_manga', function($table) {
+            $table->dropForeign('loan_manga_loan_id_foreign');
+            $table->dropForeign('loan_manga_manga_id_foreign');
+        });
+        
         Schema::drop('borrowers');
         Schema::drop('loans');
         Schema::drop('authors');
