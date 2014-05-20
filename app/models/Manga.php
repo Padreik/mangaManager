@@ -1,6 +1,6 @@
 <?php
 
-class Series extends Eloquent {
+class Manga extends Eloquent {
     public function series() {
         return $this->belongsTo('Series');
     }

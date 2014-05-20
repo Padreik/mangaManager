@@ -5,6 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
+    <base href='{{ Config::get('app.url') }}' />
+    
     <title>@yield('title') - BD Manga</title>
     
     <!-- JQuery -->
@@ -24,6 +26,8 @@
     
     <!-- Custom -->
     {{ HTML::style('css/layout.css'); }}
+    
+    @yield('header')
 </head>
 <body>
     <div class="navbar navbar-default navbar-fixed-top" role="navigation">

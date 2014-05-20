@@ -15,3 +15,4 @@ Route::get('/', 'ImportController@collection');
 
 Route::get('import/collection', 'ImportController@collection');
 Route::post('import/collection', 'ImportController@collectionSave');
+Route::get('import/ajax/series', 'ImportController@ajaxNextSeries');

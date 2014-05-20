@@ -32,24 +32,28 @@ class InitialConfig extends Migration {
         Schema::create('authors', function($table) {
             $table->increments('id');
             $table->string('name');
+            $table->string('source');
             $table->timestamps();
         });
         
         Schema::create('types', function($table) {
             $table->increments('id');
             $table->string('name');
+            $table->string('source');
             $table->timestamps();
         });
         
         Schema::create('genres', function($table) {
             $table->increments('id');
             $table->string('name');
+            $table->string('source');
             $table->timestamps();
         });
         
         Schema::create('editors', function($table) {
             $table->increments('id');
             $table->string('name');
+            $table->string('source');
             $table->timestamps();
         });
         
@@ -64,15 +68,11 @@ class InitialConfig extends Migration {
             
             $table->string('name');
             $table->string('original_name');
-            $table->integer('author_id');
-            $table->integer('artist_id');
-            $table->integer('type_id');
-            $table->integer('edition_id');
-            $table->integer('country_id');
             $table->integer('number_of_volumes');
             $table->integer('number_of_original_volumes');
             $table->integer('recommended_age');
-            $table->string('image');
+            $table->binary('image');
+            $table->string('source');
             
             $table->timestamps();
         });
@@ -86,7 +86,8 @@ class InitialConfig extends Migration {
             $table->integer('pages');
             $table->string('ean');
             $table->text('summary');
-            $table->string('image');
+            $table->binary('image');
+            $table->string('source');
             
             $table->timestamps();
             
