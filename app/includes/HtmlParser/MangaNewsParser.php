@@ -70,15 +70,23 @@ class MangaNewsParser implements HtmlParser {
             $newSeries->recommended_age = intval($ageHtml->innertext);
         }
         
-        $numberOfVolumes = count($seriesHtml->find('div[class=serieVolumesImgBlock]'));
-        $newSeries->number_of_volumes = $numberOfVolumes;
-        $newSeries->number_of_original_volumes = $numberOfVolumes;
+        $numberOfVolumesHtml = $this->html->find('div[id=numberblock]', 0);
+        if ($numberOfVolumesHtml) {
+            $numberOfVolumes = $numberOfVolumesHtml->plaintext;
+            preg_match('/VF\s*:\s*(\d+)/', $numberOfVolumes, $matchVF);
+            $newSeries->number_of_volumes = count($matchVF) > 0 ? $matchVF[1] : 0;
+            
+            preg_match('/VO\s*:\s*(\d+)/', $numberOfVolumes, $matchVO);
+            $newSeries->number_of_original_volumes = count($matchVO) > 0 ? $matchVO[1] : 0;
+        }
         
         $imageHtml = $seriesHtml->find('img[class=entryPicture]', 0);
         if ($imageHtml) {
             $imageSrc = $imageHtml->src;
             if ($imageSrc) {
-                $newSeries->image = base64_encode(file_get_contents($imageSrc));
+                $type = pathinfo($imageSrc, PATHINFO_EXTENSION);
+                $data = file_get_contents($imageSrc);
+                $newSeries->image = 'data:image/' . $type . ';base64,' . base64_encode($data);
             }
         }
         $newSeries->save();
@@ -220,7 +228,9 @@ class MangaNewsParser implements HtmlParser {
         if ($imageHtml) {
             $imageUrl = $imageHtml->src;
             if ($imageUrl) {
-                $newManga->image = base64_encode(file_get_contents($imageUrl));
+                $type = pathinfo($imageUrl, PATHINFO_EXTENSION);
+                $data = file_get_contents($imageUrl);
+                $newManga->image = 'data:image/' . $type . ';base64,' . base64_encode($data);
             }
         }
         $newManga->series()->associate($series);

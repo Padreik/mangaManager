@@ -39,12 +39,12 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                   </button>
-                <a class="navbar-brand" href="/">BD Manga</a>
+                <a class="navbar-brand" href="{{ URL::to('/') }}">BD Manga</a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li class="active">
-                        <a href="#">Importation</a>
+                    <li>
+                        {{ HTML::linkAction('ImportController@collection', 'Importation') }}
                     </li>
                 </ul>
             </div>
