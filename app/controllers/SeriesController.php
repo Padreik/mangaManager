@@ -6,6 +6,10 @@ class SeriesController extends BaseController {
         return View::make('series.index')->with('series', \Series::all());
     }
     
+    public function show($id) {
+        return View::make('series.show')->with('series', \Series::find($id));
+    }
+    
     public function image($id) {
         $series = \Series::find($id);
         if (is_object($series)) {

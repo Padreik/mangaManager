@@ -1,10 +1,6 @@
 <?php
 namespace pgirardnet\Manga\HtmlParser;
 
-include_once(app_path().'/includes/AbsoluteUrl.php');
-include_once(app_path().'/includes/HtmlParser/HtmlParser.php');
-include_once(app_path().'/includes/SessionRepository.php');
-
 class MangaNewsParser implements HtmlParser {
     protected $html; // Due to a memory problem, the html object when parsing is stocked here
     

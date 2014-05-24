@@ -1,8 +1,5 @@
 <?php
 
-include_once(app_path().'/includes/HtmlParser/MangaNewsParser.php');
-include_once(app_path().'/includes/SessionRepository.php');
-
 class ImportController extends BaseController {
     
     protected $COLLECTION_URL = "http://www.manga-news.com/index.php/collection-manga/";
@@ -32,12 +29,6 @@ class ImportController extends BaseController {
             }
             $_SESSION['manga']['importer']['count'] = 0;
             $seriesInSession = \pgirardnet\Manga\SessionRepository::getImporterSeries();
-            //$this->ajaxNextSeries();
-            
-            /*$series = Series::find(9);
-            $mangas = \pgirardnet\Manga\SessionRepository::getImporterMangas();
-            $parser = new \pgirardnet\Manga\HtmlParser\MangaNewsParser();
-            $parser->importManga($mangas[0], $series);*/
             
             return View::make('import.collectionSave')->with(
                 array(
