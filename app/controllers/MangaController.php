@@ -7,6 +7,11 @@ class MangaController extends BaseController {
         return View::make('manga.index')->with('mangas', $series->mangas);
     }
     
+    public function show($id) {
+        $manga = \Manga::find($id);
+        return View::make('manga.show')->with('manga', $manga);
+    }
+    
     public function image($id) {
         $manga = \Manga::find($id);
         if (is_object($manga)) {
