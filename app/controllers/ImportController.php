@@ -27,30 +27,76 @@ class ImportController extends BaseController {
             catch(Exception $e) {
                 return Redirect::action('ImportController@collection')->with('error_parse', '1');
             }
-            $_SESSION['manga']['importer']['count'] = 0;
+            $_SESSION['manga']['importer']['count'] = array(
+                'total' => 0,
+                'series' => 0,
+                'mangas' => 0
+            );
             $seriesInSession = \pgirardnet\Manga\SessionRepository::getImporterSeries();
             
             return View::make('import.collectionSave')->with(
                 array(
-                    'number_of_series' => count($seriesInSession),
+                    'number_of_series' => $this->countSeriesAndMangas($seriesInSession),
                     'first_series' => $seriesInSession[0]['name']
                 )
             );
         }
     }
     
+    protected function countSeriesAndMangas($array) {
+        $total = 0;
+        foreach ($array as $series) {
+            $total++;
+            $total += count($series['mangas']);
+        }
+        return $total;
+    }
+    
     public function ajaxNextSeries() {
         $seriesInSession = \pgirardnet\Manga\SessionRepository::getImporterSeries();
-        $_SESSION['manga']['importer']['count']++;
-        $i = $_SESSION['manga']['importer']['count'];
-        $nextSeries = $i > count($seriesInSession) ? false : $seriesInSession[$i]['name'];
-        
+        $counting = &$_SESSION['manga']['importer']['count'];
         $parser = new \pgirardnet\Manga\HtmlParser\MangaNewsParser();
-        $parser->parseSeries($seriesInSession[$i]['url']);
+        
+        if ($counting['total'] == 0 || $counting['mangas'] >= count($seriesInSession[$counting['series']]['mangas'])) {
+            // Import series
+            if ($counting['total'] > 0) {
+                $counting['series']++;
+            }
+            $counting['mangas'] = 0;
+            $seriesInSession[$counting['series']]['object'] = $parser->parseSeries($seriesInSession[$counting['series']]['url']);
+            \pgirardnet\Manga\SessionRepository::setImporterSeries($seriesInSession);
+            $nextImportName = $seriesInSession[$counting['series']]['mangas'][$counting['mangas']]['name'];
+        }
+        else {
+            // Import Manga
+            $parser->importManga(
+                $seriesInSession[$counting['series']]['mangas'][$counting['mangas']]['url'],
+                $seriesInSession[$counting['series']]['object'],
+                $seriesInSession[$counting['series']]['mangas'][$counting['mangas']]['number'],
+                $seriesInSession[$counting['series']]['mangas'][$counting['mangas']]['name']
+            );
+            $counting['mangas']++;
+            if ($counting['mangas'] >= count($seriesInSession[$counting['series']]['mangas'])) {
+                if ($counting['series'] + 1 >= count($seriesInSession)) {
+                    $nextImportName = false;
+                }
+                else {
+                    $nextImportName = $seriesInSession[$counting['series'] + 1]['name'];
+                }
+            }
+            else {
+                $nextImportName = $seriesInSession[$counting['series']]['mangas'][$counting['mangas']]['name'];
+            }
+        }
+        $counting['total']++;
+        
+        
+        //sleep(rand(0.1,2));
+        sleep(1);
         
         return Response::json(array(
-            'current_series' => $i,
-            'next_series' => $nextSeries
+            'current_index' => $counting['total'],
+            'next_import' => $nextImportName
         ));
     }
 }

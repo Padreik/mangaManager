@@ -8,6 +8,7 @@
     {{ HTML::script('js/collection.js') }}
     <script>
         $(function() {
+            totalImportationToDo = {{ $number_of_series }};
             getNextSeries();
         });
     </script>
@@ -20,5 +21,6 @@
             <span class="sr-only">0% Complete</span>
         </div>
     </div>
-    <span id="importation_text">Importation de <span id="importation_title">{{ $first_series }}</span></span>
+    <p id="importation_text">Importation de <span id="importation_title">{{ $first_series }}</span> (<span id="importation_progression">1</span>/{{ $number_of_series }})</p>
+    <p id="temps_restant_wrapper">Temps restant : <span id="temps_restants">?</span></p>
 @stop

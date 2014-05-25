@@ -82,6 +82,7 @@ class InitialConfig extends Migration {
             
             $table->integer('series_id')->unsigned();
             $table->integer('number');
+            $table->string('name');
             $table->date('parution');
             $table->integer('pages');
             $table->string('ean');

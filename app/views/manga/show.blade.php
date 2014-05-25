@@ -1,14 +1,14 @@
 @extends('layout')
 
 @section('title')
-    {{ $manga->series->name }} Volume {{ $manga->number }}
+    {{ $manga->series->name }} - {{ $manga->nameToDisplay }}
 @stop
 
 @section('content')
     <div class="row">
         <div class="col-md-9 infosArray list-group">
             {{ DivAsArray::format("Numéro", $manga->number) }}
-            {{ DivAsArray::format("Parution", date('d m Y', strtotime($manga->parution) ) ) }}
+            {{ DivAsArray::format("Parution", strftime('%e %B %Y', strtotime($manga->parution) ) ) }}
             {{ DivAsArray::format("Nombre de pages", $manga->pages) }}
             {{ DivAsArray::format("EAN", $manga->ean) }}
             {{ DivAsArray::format("Résumé", $manga->summary) }}

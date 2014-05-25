@@ -6,8 +6,9 @@ class MangaNewsParser implements HtmlParser {
     
     public function parseCollection($url) {
         $links = array();
+        $userId = -1;
         do {
-            $this->parseCollectionPage($url, $links);
+            $this->parseCollectionPage($url, $links, $userId);
             $url = $this->getNextPageLink($url);
             $this->clearPageInMemory();
         } while ($url);
@@ -15,16 +16,60 @@ class MangaNewsParser implements HtmlParser {
         \pgirardnet\Manga\SessionRepository::setImporterSeries($links);
     }
     
-    protected function parseCollectionPage($url, &$links) {
+    protected function parseCollectionPage($url, &$links, &$userId) {
         $this->html = new \Htmldom($url);
+        if ($userId == -1) {
+            $userId = $this->getUserId();
+        }
         $series = $this->html->find('div[id=collecseries] table tbody tr[class=line]');
         foreach ($series as $serie) {
+            $seriesIdHtml = $serie->id;
+            $mangasLinks = array();
+            if ($seriesIdHtml) {
+                // Format id s###, we must remove the s
+                $seriesId = substr($seriesIdHtml, 1);
+                $mangasLinks = $this->parseOwnedMangaFromCollectionPage($seriesId, $userId);
+            }
+            
             $link = $serie->find('td[class=titre] a', 0);
             $links[] = array(
-                'url' => url_to_absolute($url, $link->href),
-                'name' => $link->plaintext
+                'url' => \AbsoluteUrl::url_to_absolute($url, $link->href),
+                'name' => $link->plaintext,
+                'mangas' => $mangasLinks
             );
         }
+    }
+    
+    protected function getUserId() {
+        $userId = 0;
+        $scripts = $this->html->find('script');
+        foreach ($scripts as $script) {
+            $javascript = $script->innertext;
+            if ($javascript) {
+                preg_match('/var member = (\d+);/', $javascript, $match);
+                if (count($match) > 0) {
+                    $userId = intval($match[1]);
+                    break;
+                }
+            }
+        }
+        return $userId;
+    }
+    
+    protected function parseOwnedMangaFromCollectionPage($seriesId, $userId) {
+        $mangasLinks = array();
+        $seriesId = intval($seriesId);
+        $url = "http://www.manga-news.com/services.php?f=getCollecSerieVols&id=$seriesId&member=$userId";
+        $xml = new \SimpleXMLElement($url, 0, true);
+        $mangas = $xml->volume;
+        foreach ($mangas as $manga) {
+            $mangasLinks[] = array(
+                'url' => "$manga->url",
+                'number' => intval($manga->vol),
+                'name' => "$manga->title"
+            );
+        }
+        return $mangasLinks;
     }
     
     protected function getNextPageLink($currentUrl) {
@@ -33,7 +78,7 @@ class MangaNewsParser implements HtmlParser {
         
         if (str_contains($lastPage->plaintext, "next")) {
             $relativeUrl = $lastPage->href;
-            $absoluteUrl = url_to_absolute($currentUrl, $relativeUrl);
+            $absoluteUrl = \AbsoluteUrl::url_to_absolute($currentUrl, $relativeUrl);
         }
         
         return $absoluteUrl;
@@ -128,18 +173,9 @@ class MangaNewsParser implements HtmlParser {
             }
         }
         
-        $mangas = $seriesHtml->find('div[id=serieVolumes] span[class=smallpicinfo] a');
-        $links = array();
-        foreach ($mangas as $manga) {
-            $links[] = $manga->href;
-        }
-        \pgirardnet\Manga\SessionRepository::setImporterMangas($links);
-        
         $this->clearPageInMemory();
         
-        foreach($links as $link) {
-            $this->importManga($link, $newSeries);
-        }
+        return $newSeries;
     }
     
     protected function removeFieldHeader($textWithHeader) {
@@ -191,14 +227,25 @@ class MangaNewsParser implements HtmlParser {
         }
     }
     
-    public function importManga($url, $series) {
+    public function importManga($url, $series, $number = -1, $title = '') {
         $this->html = new \Htmldom($url);
         $mangaHtml = $this->html->find('div[id=main]', 0);
         $newManga = new \Manga();
         $newManga->source = $url;
         
-        preg_match('/\d+$/', $url, $match);
-        $newManga->number = intval(count($match) > 0 ? $match[0] : 0);
+        if ($number > -1) {
+            $newManga->number = $number;
+        }
+        else {
+            preg_match('/\d+$/', $url, $match);
+            $newManga->number = intval(count($match) > 0 ? $match[0] : 0);
+        }
+        
+        if ($title == '') {
+            $titleWithWhitespaces = $mangaHtml->find('h2[class=entryTitle]', 0)->plaintext;
+            $title = trim(preg_replace('/\s+/', ' ', $titleWithWhitespaces));
+        }
+        $newManga->name = $title;
         
         $parutionHtml = $mangaHtml->find('meta[itemprop=datePublished]', 0);
         if ($parutionHtml) {

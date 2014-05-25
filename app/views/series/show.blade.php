@@ -36,7 +36,7 @@
             <div class="col-md-2">
                 <a href="{{ URL::action('MangaController@show', array('id' => $manga->id)) }}" class="thumbnail">
                     <img src="{{ URL::action('MangaController@image', array('id' => $manga->id)) }}" alt="{{ $manga->name }}" />
-                    <p>Volume {{ $manga->number }}</p>
+                    <p>{{ $manga->nameToDisplay }}</p>
                 </a>
             </div>
             @if($i % 6 == 5 or $i >= $nbMangas)
