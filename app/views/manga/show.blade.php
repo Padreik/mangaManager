@@ -7,7 +7,6 @@
 @section('content')
     <div class="row">
         <div class="col-md-9 infosArray list-group">
-            {{ DivAsArray::format("Numéro", $manga->number) }}
             {{ DivAsArray::format("Parution", strftime('%e %B %Y', strtotime($manga->parution) ) ) }}
             {{ DivAsArray::format("Nombre de pages", $manga->pages) }}
             {{ DivAsArray::format("EAN", $manga->ean) }}
