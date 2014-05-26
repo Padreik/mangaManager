@@ -47,6 +47,11 @@
                         {{ HTML::linkAction('ImportController@collection', 'Importation') }}
                     </li>
                 </ul>
+                <ul class="nav navbar-nav pull-right">
+                    <li>
+                        <a href="#"><span class="glyphicon glyphicon-shopping-cart"></span><span class="badge pull-right">{{ \pgirardnet\Manga\LoanCartSessionRepository::getCount() }}</span></a>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
