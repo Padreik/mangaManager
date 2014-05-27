@@ -10,12 +10,12 @@
     <title>@yield('title') - BD Manga</title>
     
     <!-- JQuery -->
-    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    {{ HTML::script('lib/jquery/jquery-2.1.1.min.js') }}
     
     <!-- Bootstrap -->
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    {{ HTML::style('lib/bootstrap/css/bootstrap.min.css') }}
+    {{ HTML::style('lib/bootstrap/css/bootstrap-theme.min.css') }}
+    {{ HTML::script('lib/bootstrap/js/bootstrap.min.js') }}
     
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -25,7 +25,7 @@
     <![endif]-->
     
     <!-- Custom -->
-    {{ HTML::style('css/layout.css'); }}
+    {{ HTML::style('css/layout.css') }}
     
     @yield('header')
 </head>
@@ -49,7 +49,7 @@
                 </ul>
                 <ul class="nav navbar-nav pull-right">
                     <li>
-                        <a href="#"><span class="glyphicon glyphicon-shopping-cart"></span><span class="badge pull-right">{{ \pgirardnet\Manga\LoanCartSessionRepository::getCount() }}</span></a>
+                        <a href="{{ URL::action('LoanController@create') }}"><span class="glyphicon glyphicon-shopping-cart"></span><span class="badge pull-right">{{ \pgirardnet\Manga\LoanCartSessionRepository::getCount() }}</span></a>
                     </li>
                 </ul>
             </div>

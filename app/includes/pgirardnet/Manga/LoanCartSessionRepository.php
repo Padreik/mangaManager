@@ -31,4 +31,13 @@ class LoanCartSessionRepository {
     public static function removeSeries($seriesId) {
         \Session::forget("loan.list.$seriesId");
     }
+    
+    public static function getCart() {
+        return \Session::get("loan.list", array());
+    }
+    
+    public static function dropCart() {
+        \Session::forget("loan.list");
+        self::updateCount();
+    }
 }
