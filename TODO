@@ -1,3 +1,5 @@
+Ajouter le status de la série lors de l'importation
+
 Prêt
 Retour de prêt
 Importation de série
@@ -9,4 +11,7 @@ Ajouter aux mangas une note sur 10
 Ajouter aux séries une moyenne des notes de ses mangas
 Ajouter aux mangas une liste des personnes qui ont lus ce livre basé sur les prêts
 Afficher total manga et série
+Recherche et/ou filtre: Auteur, genre, lu par
 Ajouter aux mangas le nombre de livres possédés
+Ajouter aux mangas un prix
+Afficher le total combiné des prix des mangas

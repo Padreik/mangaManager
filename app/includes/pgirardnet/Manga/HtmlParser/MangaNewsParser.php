@@ -3,6 +3,17 @@ namespace pgirardnet\Manga\HtmlParser;
 
 class MangaNewsParser implements HtmlParser {
     protected $html; // Due to a memory problem, the html object when parsing is stocked here
+    protected $doubledSeries = array(
+        3467 => 457, // Demon king
+        4478 => 846, // D.Gray-man
+        10737 => 846, // D.Gray-man
+        9908 => 634, // FullMetal Alchemist
+        1609 => 605, // Nana
+        9321 => 248, // Naruto
+        16927 => 3895, // Pandora Hearts
+        4475 => 559, // Parmis eux
+        2072 => 776, // Platina
+    );
     
     public function parseCollection($url) {
         $links = array();
@@ -13,7 +24,7 @@ class MangaNewsParser implements HtmlParser {
             $this->clearPageInMemory();
         } while ($url);
         
-        \pgirardnet\Manga\SessionRepository::setImporterSeries($links);
+        \pgirardnet\Manga\SessionRepository::setImporterSeries(array_values($links));
     }
     
     protected function parseCollectionPage($url, &$links, &$userId) {
@@ -31,12 +42,30 @@ class MangaNewsParser implements HtmlParser {
                 $mangasLinks = $this->parseOwnedMangaFromCollectionPage($seriesId, $userId);
             }
             
-            $link = $serie->find('td[class=titre] a', 0);
-            $links[] = array(
-                'url' => \AbsoluteUrl::url_to_absolute($url, $link->href),
-                'name' => $link->plaintext,
-                'mangas' => $mangasLinks
-            );
+            if (isset($this->doubledSeries[$seriesId])) {
+                $otherId = $this->doubledSeries[$seriesId];
+                if (isset($links[$otherId])) {
+                    $links[$otherId]['mangas'] = array_merge($links[$otherId]['mangas'], $mangasLinks);
+                }
+                else {
+                    $links[$otherId]['mangas'] = $mangasLinks;
+                }
+            }
+            else {
+                $link = $serie->find('td[class=titre] a', 0);
+                if (isset($links[$seriesId])) {
+                    $links[$seriesId]['mangas'] = array_merge($links[$otherId]['mangas'], $mangasLinks);
+                    $links[$seriesId]['url'] = \AbsoluteUrl::url_to_absolute($url, $link->href);
+                    $links[$seriesId]['name'] = $link->plaintext;
+                }
+                else {
+                    $links[$seriesId] = array(
+                        'url' => \AbsoluteUrl::url_to_absolute($url, $link->href),
+                        'name' => $link->plaintext,
+                        'mangas' => $mangasLinks
+                    );
+                }
+            }
         }
     }
     
