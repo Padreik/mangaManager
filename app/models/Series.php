@@ -29,4 +29,8 @@ class Series extends Eloquent {
     public function genres() {
         return $this->belongsToMany('Genre')->withTimestamps();
     }
+    
+    public function status() {
+        return $this->belongsTo('Status');
+    }
 }

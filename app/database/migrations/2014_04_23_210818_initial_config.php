@@ -63,9 +63,16 @@ class InitialConfig extends Migration {
             $table->timestamps();
         });
         
+        Schema::create('statuses', function($table) {
+            $table->increments('id');
+            $table->string('name');
+            $table->timestamps();
+        });
+        
         Schema::create('series', function($table) {
             $table->increments('id');
             
+            $table->integer('status_id')->unsigned();
             $table->string('name');
             $table->string('original_name');
             $table->integer('number_of_volumes');
@@ -75,6 +82,8 @@ class InitialConfig extends Migration {
             $table->string('source');
             
             $table->timestamps();
+            
+            $table->foreign('status_id')->references('id')->on('statuses');
         });
         
         Schema::create('mangas', function($table) {
@@ -161,6 +170,9 @@ class InitialConfig extends Migration {
         Schema::table('loans', function($table) {
             $table->dropForeign('loans_borrower_id_foreign');
         });
+        Schema::table('series', function($table) {
+            $table->dropForeign('series_status_id_foreign');
+        });
         Schema::table('mangas', function($table) {
             $table->dropForeign('mangas_series_id_foreign');
         });
@@ -196,6 +208,7 @@ class InitialConfig extends Migration {
         Schema::drop('genres');
         Schema::drop('editors');
         Schema::drop('countries');
+        Schema::drop('statuses');
         Schema::drop('series');
         Schema::drop('mangas');
         Schema::drop('genre_series');

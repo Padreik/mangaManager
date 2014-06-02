@@ -148,6 +148,26 @@ class MangaNewsParser implements HtmlParser {
             
             preg_match('/VO\s*:\s*(\d+)/', $numberOfVolumes, $matchVO);
             $newSeries->number_of_original_volumes = count($matchVO) > 0 ? $matchVO[1] : 0;
+            
+            // Find the series status
+            preg_match('/VF\s*:\s*\d+\s*\((.*)\)/', $numberOfVolumes, $matchVF);
+            $statusVF = count($matchVF) > 0 ? $matchVF[1] : "";
+            preg_match('/VO\s*:\s*\d+\s*\((.*)\)/', $numberOfVolumes, $matchVO);
+            $statusVO = count($matchVO) > 0 ? $matchVO[1] : "";
+            
+            if ($statusVF == "Stoppé" || $statusVO == "Stoppé") {
+                $status = \Status::where('name', 'like', \Status::STOPPE)->firstOrFail();
+            }
+            elseif ($statusVF == "En cours" && $statusVO == "Terminé") {
+                $status = \Status::where('name', 'like', \Status::TERMINE_VO)->firstOrFail();
+            }
+            elseif ($statusVF == "Terminé" || $statusVO == "Terminé") {
+                $status = \Status::where('name', 'like', \Status::TERMINE)->firstOrFail();
+            }
+            else {
+                $status = \Status::where('name', 'like', \Status::EN_COURS)->firstOrFail();
+            }
+            $newSeries->status()->associate($status);
         }
         
         $imageHtml = $seriesHtml->find('img[class=entryPicture]', 0);
