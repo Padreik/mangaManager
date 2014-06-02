@@ -9,7 +9,7 @@ class LoanCartSessionRepository {
     
     public static function updateCount() {
         $count = 0;
-        foreach (\Session::get('loan.list') as $series) {
+        foreach (\Session::get('loan.list', array()) as $series) {
             $count += count ($series);
         }
         \Session::put('loan.count', $count);
