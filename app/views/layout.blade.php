@@ -44,6 +44,9 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>
+                        {{ HTML::linkAction('LoanController@index', 'Historique') }}
+                    </li>
+                    <li>
                         {{ HTML::linkAction('ImportController@collection', 'Importation') }}
                     </li>
                 </ul>

@@ -1,6 +1,10 @@
 <?php
 
 class LoanController extends BaseController {
+    public function index() {
+        return View::make('loan.index')->with('loans', \Loan::paginate(20));
+    }
+    
     public function create() {
         $cartIds = \pgirardnet\Manga\LoanCartSessionRepository::getCart();
         $cart = array();
