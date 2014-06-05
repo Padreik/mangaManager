@@ -23,4 +23,29 @@ class DivAsArray {
         }
         return self::format($header, implode(", ", $contentInArray));
     }
+    
+    public static function formatBorrowersForSeries($header, $mangas) {
+        $borrowers = array();
+        
+        foreach ($mangas as $manga) {
+            if (is_object($manga->borrower)) {
+                if (!isset($borrowers[$manga->borrower_id])) {
+                    $borrowers[$manga->borrower_id]['object'] = $manga->borrower;
+                    $borrowers[$manga->borrower_id]['mangas'] = array();
+                }
+                $borrowers[$manga->borrower_id]['mangas'][] = $manga->shortNameToDisplay;
+            }
+        }
+        if (count($borrowers) > 0) {
+            $flatBorrowers = array();
+            foreach ($borrowers as $borrower) {
+                $flatBorrowers[] = $borrower['object']->name . " (" . implode(', ', $borrower['mangas']) . ")";
+            }
+            $content = implode("<br/>", $flatBorrowers);
+        }
+        else {
+            $content = '--';
+        }
+        return self::format($header, $content);
+    }
 }

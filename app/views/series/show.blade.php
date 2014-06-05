@@ -28,6 +28,7 @@
                 {{ DivAsArray::format("Nombre de volumes VO", $series->number_of_original_volumes) }}
                 {{ DivAsArray::format("Âge recommendé", $series->recommended_age) }}
                 {{ DivAsArray::format("Status", $series->status->name) }}
+                {{ DivAsArray::formatBorrowersForSeries("Prèté à", $series->mangas) }}
             </div>
             <div class="col-md-3 text-right">
                 <img src="{{ URL::action('SeriesController@image', array('id' => $series->id)) }}" alt="{{ $series->name }}" class="series-show" />
