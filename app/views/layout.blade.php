@@ -43,8 +43,16 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>
-                        {{ HTML::linkAction('LoanController@index', 'Historique') }}
+                    <li class='dropdown'>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Prêt <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                {{ HTML::linkAction('ReturnController@index', 'Retour') }}
+                            </li>
+                            <li>
+                                {{ HTML::linkAction('LoanController@history', 'Historique') }}
+                            </li>
+                        </ul>
                     </li>
                     <li>
                         {{ HTML::linkAction('ImportController@collection', 'Importation') }}

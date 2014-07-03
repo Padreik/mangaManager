@@ -1,7 +1,7 @@
 @extends('layout')
 
 @section('title')
-    Prêts
+    Historique des prêts
 @stop
 
 @section('content')

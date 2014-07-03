@@ -1,8 +1,8 @@
 <?php
 
 class LoanController extends BaseController {
-    public function index() {
-        return View::make('loan.index')->with('loans', \Loan::paginate(20));
+    public function history() {
+        return View::make('loan.history')->with('loans', \Loan::paginate(20));
     }
     
     public function create() {

@@ -23,7 +23,11 @@ Route::get('series/{id}/image', 'SeriesController@image');
 Route::resource('manga', 'MangaController');
 Route::get('manga/{id}/image', 'MangaController@image');
 
+Route::get('loan/history', 'LoanController@history');
 Route::resource('loan', 'LoanController');
+
+Route::resource('return', 'ReturnController', array('except' => array('create')));
+Route::get('return/create/{borrower_id}', 'ReturnController@create');
 
 Route::put('cart/{id}', 'LoanCartController@add');
 Route::post('cart/{id}', 'LoanCartController@update');
