@@ -2,7 +2,7 @@
 
 class LoanController extends BaseController {
     public function history() {
-        return View::make('loan.history')->with('loans', \Loan::paginate(20));
+        return View::make('loan.history')->with('loans', \Loan::orderBy('loan_date', 'desc')->orderBy('id', 'created_at')->paginate(20));
     }
     
     public function create() {
