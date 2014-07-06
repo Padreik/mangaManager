@@ -64,7 +64,4 @@
             @endforeach
         </div>
     {{ Form::close() }}
-    <?php
-        var_dump(\Session::get('loan'));
-    ?>
 @stop
