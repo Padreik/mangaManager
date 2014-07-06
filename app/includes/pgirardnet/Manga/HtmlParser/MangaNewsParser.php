@@ -101,6 +101,38 @@ class MangaNewsParser implements HtmlParser {
         return $mangasLinks;
     }
     
+    public function parseOwnedMangaFromSeries($seriesUrl, $mangasNumber) {
+        $mangasLinks = array();
+        $this->html = new \Htmldom($seriesUrl);
+        
+        // Parse Mangas links
+        $mangas = $this->html->find('div[id=serieVolumes] a');
+        foreach ($mangasNumber as $mangaNewsIndex) {
+            $link = $mangas[$mangaNewsIndex - 1];
+            $mangasLinks[] = array(
+                'url' => \AbsoluteUrl::url_to_absolute($seriesUrl, $link->href),
+                'number' => $mangaNewsIndex,
+                'name' => "$link->title"
+            );
+        }
+        
+        // Parse series name for ajax array
+        $nameHtml = $this->html->find('h2[class=entryTitle]', 0);
+        if ($nameHtml) {
+            $seriesName = trim($nameHtml->innertext);
+        }
+        $links = array(
+            0 => array(
+                'url' => $seriesUrl,
+                'name' => "$seriesName",
+                'mangas' => $mangasLinks
+            )
+        );
+        
+        \pgirardnet\Manga\SessionRepository::setImporterSeries(array_values($links));
+        $this->clearPageInMemory();
+    }
+    
     protected function getNextPageLink($currentUrl) {
         $absoluteUrl = false;
         $lastPage = $this->html->find('div[class=pager] a', -1);

@@ -54,8 +54,16 @@
                             </li>
                         </ul>
                     </li>
-                    <li>
-                        {{ HTML::linkAction('ImportController@collection', 'Importation') }}
+                    <li class='dropdown'>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Importation <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                {{ HTML::linkAction('ImportController@collection', 'Collection') }}
+                            </li>
+                            <li>
+                                {{ HTML::linkAction('ImportController@series', 'Série') }}
+                            </li>
+                        </ul>
                     </li>
                 </ul>
                 <ul class="nav navbar-nav pull-right">

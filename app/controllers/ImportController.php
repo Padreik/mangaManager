@@ -3,6 +3,7 @@
 class ImportController extends BaseController {
     
     protected $COLLECTION_URL = "http://www.manga-news.com/index.php/collection-manga/";
+    protected $SERIES_URL = "http://www.manga-news.com/index.php/serie/";
     
     public function collection() {
         return View::make('import.collection')->with('collection_url', $this->COLLECTION_URL);
@@ -15,7 +16,7 @@ class ImportController extends BaseController {
         
         $validator = Validator::make(Input::all(), $validationRules);
         if ($validator->fails()) {
-            Input::flashAll();
+            Input::flash();
             return Redirect::action('ImportController@collection')->withErrors($validator);
         }
         else {
@@ -35,6 +36,54 @@ class ImportController extends BaseController {
             $seriesInSession = \pgirardnet\Manga\SessionRepository::getImporterSeries();
             
             return View::make('import.collectionSave')->with(
+                array(
+                    'number_of_series' => $this->countSeriesAndMangas($seriesInSession),
+                    'first_series' => $seriesInSession[0]['name']
+                )
+            );
+        }
+    }
+    
+    public function series() {
+        return View::make('import.series')->with('series_url', $this->SERIES_URL);
+    }
+    
+    public function seriesSave() {
+        $validationRules = array(
+            'url' => 'required',
+            'volumes' => 'required'
+        );
+        
+        $validator = Validator::make(Input::all(), $validationRules);
+        if ($validator->fails()) {
+            Input::flash();
+            return Redirect::action('ImportController@series')->withErrors($validator);
+        }
+        else {
+            $url = $this->SERIES_URL.Input::get('url');
+            // http://stackoverflow.com/questions/7698664/converting-a-range-or-partial-array-in-the-form-3-6-or-3-6-12-into-an-arra#answer-7698869
+            $mangasInString = preg_replace_callback('/(\d+)-(\d+)/', function($m) {
+                return implode(',', range($m[1], $m[2]));
+            }, Input::get('volumes'));
+            $mangas = array_unique(explode(',', $mangasInString));
+            
+            try {
+                $parser = new \pgirardnet\Manga\HtmlParser\MangaNewsParser();
+                $parser->parseOwnedMangaFromSeries($url, $mangas);
+            }
+            catch(Exception $e) {
+                Input::flash();
+                return Redirect::action('ImportController@series')->with('error_parse', '1');
+            }
+            
+            $_SESSION['manga']['importer']['count'] = array(
+                'total' => 0,
+                'series' => 0,
+                'mangas' => 0
+            );
+            $seriesInSession = \pgirardnet\Manga\SessionRepository::getImporterSeries();
+            
+            return View::make('import.seriesSave')->with(
                 array(
                     'number_of_series' => $this->countSeriesAndMangas($seriesInSession),
                     'first_series' => $seriesInSession[0]['name']
