@@ -3,7 +3,7 @@
 class SeriesController extends BaseController {
     
     public function index() {
-        return View::make('series.index')->with('series', \Series::all());
+        return View::make('series.index')->with('series', \Series::orderBy('name')->get());
     }
     
     public function show($id) {
