@@ -63,6 +63,9 @@
                             <li>
                                 {{ HTML::linkAction('ImportController@series', 'Série') }}
                             </li>
+                            <li>
+                                {{ HTML::linkAction('ImportController@manga', 'Manga') }}
+                            </li>
                         </ul>
                     </li>
                 </ul>

@@ -308,11 +308,17 @@ class MangaNewsParser implements HtmlParser {
         }
     }
     
-    public function importManga($url, $series, $number = -1, $title = '') {
+    public function importManga($url, $series = null, $number = -1, $title = '') {
         $this->html = new \Htmldom($url);
         $mangaHtml = $this->html->find('div[id=main]', 0);
         $newManga = new \Manga();
         $newManga->source = $url;
+        
+        $titleHtml = $mangaHtml->find('h2[class=entryTitle]', 0);
+        
+        if (is_null($series)) {
+            $series = \Series::where('source', '=', $titleHtml->find('a', 0)->href)->firstOrFail();
+        }
         
         if ($number > -1) {
             $newManga->number = $number;
@@ -323,7 +329,7 @@ class MangaNewsParser implements HtmlParser {
         }
         
         if ($title == '') {
-            $titleWithWhitespaces = $mangaHtml->find('h2[class=entryTitle]', 0)->plaintext;
+            $titleWithWhitespaces = $titleHtml->plaintext;
             $title = trim(preg_replace('/\s+/', ' ', $titleWithWhitespaces));
         }
         $newManga->name = $title;
@@ -361,6 +367,8 @@ class MangaNewsParser implements HtmlParser {
         $newManga->save();
         
         $this->clearPageInMemory();
+        
+        return $newManga;
     }
 
 }

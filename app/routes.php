@@ -18,6 +18,8 @@ Route::post('import/collection', 'ImportController@collectionSave');
 Route::get('import/ajax/series', 'ImportController@ajaxNextSeries');
 Route::get('import/series', 'ImportController@series');
 Route::post('import/series', 'ImportController@seriesSave');
+Route::get('import/manga', 'ImportController@manga');
+Route::post('import/manga', 'ImportController@mangaSave');
 
 Route::resource('series', 'SeriesController');
 Route::get('series/{id}/image', 'SeriesController@image');

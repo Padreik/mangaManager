@@ -4,6 +4,7 @@ class ImportController extends BaseController {
     
     protected $COLLECTION_URL = "http://www.manga-news.com/index.php/collection-manga/";
     protected $SERIES_URL = "http://www.manga-news.com/index.php/serie/";
+    protected $MANGA_URL = "http://www.manga-news.com/index.php/manga/";
     
     public function collection() {
         return View::make('import.collection')->with('collection_url', $this->COLLECTION_URL);
@@ -89,6 +90,46 @@ class ImportController extends BaseController {
                     'first_series' => $seriesInSession[0]['name']
                 )
             );
+        }
+    }
+    
+    public function manga() {
+        $series = \Series::orderby('name')->lists('name', 'id');
+        $seriesWithDefault = array(0 => 'Détection automatique') + $series;
+        return View::make('import.manga')->with('manga_url', $this->MANGA_URL)->with('series', $seriesWithDefault);
+    }
+    
+    public function mangaSave() {
+        $validationRules = array(
+            'url' => 'required',
+            'number' => 'numeric'
+        );
+        
+        $validator = Validator::make(Input::all(), $validationRules);
+        if ($validator->fails()) {
+            Input::flash();
+            return Redirect::action('ImportController@manga')->withErrors($validator);
+        }
+        else {
+            $url = $this->MANGA_URL.Input::get('url');
+            $series = Input::get('series') == 0 ? null : \Series::find(intval(Input::get('series')));
+            $number = Input::get('number') == '' ? -1 : intval(Input::get('number')); // Default value is -1
+            $title = Input::get('title'); // Empty is default value for the import funciton
+            
+            try {
+                $parser = new \pgirardnet\Manga\HtmlParser\MangaNewsParser();
+                $manga = $parser->importManga($url, $series, $number, $title);
+            }
+            catch(\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+                Input::flash();
+                return Redirect::action('ImportController@manga')->with('error_series_not_found', '1');
+            }
+            catch(Exception $e) {
+                Input::flash();
+                return Redirect::action('ImportController@manga')->with('error_parse', '1');
+            }
+            
+            return View::make('import.mangaSave')->with('manga', $manga);
         }
     }
     
