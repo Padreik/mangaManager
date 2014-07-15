@@ -9,6 +9,13 @@
 @stop
 
 @section('content')
+    <div class="alert alert-danger delete-confirmation alert-dismissible" role="alert" style="display:none;">
+        <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        {{ Form::open(array('action' => array('SeriesController@destroy', $series->id), 'method' => 'delete')) }}
+            Voulez-vous vraiment supprimer cette série et tous les mangas liés?
+            <button type="submit" class="btn btn-danger btn-sm">Oui</button>
+        {{ Form::close() }}
+    </div>
     @if (\pgirardnet\Manga\LoanCartSessionRepository::seriesInCart($series->id))
         {{ Form::open(array('action' => array('LoanCartController@remove', $series->id), 'method' => 'delete')) }}
     @else
@@ -37,7 +44,28 @@
                 @else
                     <button type="submit" class="btn btn-success btn-lg btn-block loan-button">Prêter la série</button>
                 @endif
-                <a href="{{ URL::action('SeriesController@edit', array('id' => $series->id)) }}" class="btn btn-default btn-lg btn-block" type="button">Modifier</a>
+                <div class="btn-group settings-button">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        <span class="glyphicon glyphicon-cog"></span> <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                        <li>
+                            <a href="{{ URL::action('SeriesController@edit', array('id' => $series->id)) }}">Modifier</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="" data-show="delete-confirmation">Supprimer</a>
+                            <script type="text/javascript">
+                                $('a[data-show]').click(function(e) {
+                                    e.preventDefault();
+                                    var name = $(this).data('show');
+                                    $("."+name).show();
+                                    window.scrollTo(0, 0);
+                                });
+                            </script>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
         <h2>Liste des volumes</h2>

@@ -58,3 +58,7 @@ a.green-link:hover {
     right: 21px;
     top: 7px;
 }
+
+.settings-button {
+    margin-top: 10px;
+}

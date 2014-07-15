@@ -33,4 +33,17 @@ class Series extends Eloquent {
     public function status() {
         return $this->belongsTo('Status');
     }
+    
+    public function delete() {
+        $this->artists()->detach();
+        $this->authors()->detach();
+        $this->countries()->detach();
+        $this->editions()->detach();
+        $this->genres()->detach();
+        $this->types()->detach();
+        foreach ($this->mangas() as $manga) {
+            $manga->delete();
+        }
+        parent::delete();
+    }
 }

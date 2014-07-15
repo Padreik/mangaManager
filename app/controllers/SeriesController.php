@@ -224,4 +224,9 @@ class SeriesController extends BaseController {
         }
         return $ids;
     }
+    
+    public function destroy($id) {
+        \Series::destroy($id);
+        return Redirect::action('SeriesController@index');
+    }
 }
