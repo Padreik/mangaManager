@@ -1,7 +1,16 @@
 @extends('layout')
 
+@section('document_title')
+    Séries
+@stop
+
 @section('title')
     Séries
+    <small>
+        <a href="{{ URL::action('SeriesController@create') }}" class="green-link">
+            <span class="glyphicon glyphicon-plus-sign"></span><span class="sr-only">Ajouter une série</span>
+        </a>
+    </small>
 @stop
 
 @section('content')

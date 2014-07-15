@@ -2,12 +2,12 @@
 
 class ImportController extends BaseController {
     
-    protected $COLLECTION_URL = "http://www.manga-news.com/index.php/collection-manga/";
-    protected $SERIES_URL = "http://www.manga-news.com/index.php/serie/";
-    protected $MANGA_URL = "http://www.manga-news.com/index.php/manga/";
+    const COLLECTION_URL = "http://www.manga-news.com/index.php/collection-manga/";
+    const SERIES_URL = "http://www.manga-news.com/index.php/serie/";
+    const MANGA_URL = "http://www.manga-news.com/index.php/manga/";
     
     public function collection() {
-        return View::make('import.collection')->with('collection_url', $this->COLLECTION_URL);
+        return View::make('import.collection')->with('collection_url', self::COLLECTION_URL);
     }
     
     public function collectionSave() {
@@ -21,7 +21,7 @@ class ImportController extends BaseController {
             return Redirect::action('ImportController@collection')->withErrors($validator);
         }
         else {
-            $url = $this->COLLECTION_URL.Input::get('username');
+            $url = self::COLLECTION_URL.Input::get('username');
             try {
                 $parser = new \pgirardnet\Manga\HtmlParser\MangaNewsParser();
                 $parser->parseCollection($url);
@@ -46,7 +46,7 @@ class ImportController extends BaseController {
     }
     
     public function series() {
-        return View::make('import.series')->with('series_url', $this->SERIES_URL);
+        return View::make('import.series')->with('series_url', self::SERIES_URL);
     }
     
     public function seriesSave() {
@@ -61,7 +61,7 @@ class ImportController extends BaseController {
             return Redirect::action('ImportController@series')->withErrors($validator);
         }
         else {
-            $url = $this->SERIES_URL.Input::get('url');
+            $url = self::SERIES_URL.Input::get('url');
             // http://stackoverflow.com/questions/7698664/converting-a-range-or-partial-array-in-the-form-3-6-or-3-6-12-into-an-arra#answer-7698869
             $mangasInString = preg_replace_callback('/(\d+)-(\d+)/', function($m) {
                 return implode(',', range($m[1], $m[2]));
@@ -96,7 +96,7 @@ class ImportController extends BaseController {
     public function manga() {
         $series = \Series::orderby('name')->lists('name', 'id');
         $seriesWithDefault = array(0 => 'Détection automatique') + $series;
-        return View::make('import.manga')->with('manga_url', $this->MANGA_URL)->with('series', $seriesWithDefault);
+        return View::make('import.manga')->with('manga_url', self::MANGA_URL)->with('series', $seriesWithDefault);
     }
     
     public function mangaSave() {
@@ -111,7 +111,7 @@ class ImportController extends BaseController {
             return Redirect::action('ImportController@manga')->withErrors($validator);
         }
         else {
-            $url = $this->MANGA_URL.Input::get('url');
+            $url = self::MANGA_URL.Input::get('url');
             $series = Input::get('series') == 0 ? null : \Series::find(intval(Input::get('series')));
             $number = Input::get('number') == '' ? -1 : intval(Input::get('number')); // Default value is -1
             $title = Input::get('title'); // Empty is default value for the import funciton

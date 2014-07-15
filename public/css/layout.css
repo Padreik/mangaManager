@@ -39,3 +39,22 @@ a.thumbnail+input[type=checkbox] {
     top: 3px;
     right: 23px;
 }
+
+a.green-link {
+    color: #000;
+}
+
+a.green-link:hover {
+    color: #3c763d;
+}
+
+.btn-group-full-width, .btn-group-full-width .multiselect-container {
+    width: 100%;
+}
+
+.link-in-textbox {
+    float: right;
+    position: absolute;
+    right: 21px;
+    top: 7px;
+}

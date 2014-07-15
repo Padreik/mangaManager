@@ -7,7 +7,14 @@
     
     <base href='{{ Config::get('app.url') }}' />
     
-    <title>@yield('title') - BD Manga</title>
+    <title>
+        @if (trim($__env->yieldContent('document_title')))
+            @yield('document_title')
+        @else
+            @yield('title')
+        @endif
+        - BD Manga
+    </title>
     
     <!-- JQuery -->
     {{ HTML::script('lib/jquery/jquery-2.1.1.min.js') }}

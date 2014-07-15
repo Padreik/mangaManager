@@ -36,3 +36,12 @@ Route::get('return/create/{borrower_id}', 'ReturnController@create');
 Route::put('cart/{id}', 'LoanCartController@add');
 Route::post('cart/{id}', 'LoanCartController@update');
 Route::delete('cart/{id}', 'LoanCartController@remove');
+
+
+
+
+
+
+Validator::resolver(function($translator, $data, $rules, $messages) {
+    return new \pgirardnet\Manga\CustomValidator($translator, $data, $rules, $messages);
+});

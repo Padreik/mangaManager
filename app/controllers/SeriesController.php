@@ -19,4 +19,111 @@ class SeriesController extends BaseController {
             return $response;
         }
     }
+    
+    public function create() {
+        $includes = array(
+            'authors' => \Author::orderby('name')->lists('name', 'id'),
+            'artists' => \Author::orderby('name')->lists('name', 'id'),
+            'countries' => \Country::orderby('name')->lists('name', 'id'),
+            'editors' => \Editor::orderby('name')->lists('name', 'id'),
+            'genres' => \Genre::orderby('name')->lists('name', 'id'),
+            'types' => \Type::orderby('name')->lists('name', 'id'),
+            'status' => \Status::orderby('name')->lists('name', 'id'),
+            'series_url' => \ImportController::SERIES_URL,
+        );
+        return View::make('series.create')->with($includes);
+    }
+    
+    public function store() {
+        $validationRules = array(
+            'name' => 'required',
+            'number_of_volumes' => 'integer',
+            'number_of_original_volumes' => 'integer',
+            'recommended_age' => 'integer',
+            'status' => 'required',
+            'image_upload' => 'image',
+            'image_url' => 'url|link_is_image',
+        );
+        
+        $messages = array(
+            'image_url' => array(
+                'link_is_image' => 'test'
+            )
+        );
+        
+        $validator = Validator::make(Input::all(), $validationRules, $messages);
+        if ($validator->fails()) {
+            Input::flash();
+            return Redirect::action('SeriesController@create')->withErrors($validator);
+        }
+        else {
+            $series = new \Series();
+            $series->name = Input::get('name');
+            $series->original_name = Input::get('original_name');
+            $series->number_of_volumes = intval(Input::get('number_of_volumes'));
+            $series->number_of_original_volumes = intval(Input::get('number_of_original_volumes'));
+            $series->recommended_age = intval(Input::get('recommended_age'));
+            $series->source = Input::get('source') ? \ImportController::SERIES_URL.Input::get('source') : '';
+            
+            $imagePath = false;
+            if (Input::get('image_url')) {
+                $imagePath = Input::get('image_url');
+            }
+            elseif (Input::file('image_upload')) {
+                $imagePath = Input::file('image_upload');
+            }
+            if ($imagePath) {
+                $type = pathinfo($imagePath, PATHINFO_EXTENSION);
+                $data = file_get_contents($imagePath);
+                $series->image = 'data:image/' . $type . ';base64,' . base64_encode($data);
+            }
+            
+            $status = \Status::find(Input::get('status'));
+            $series->status()->associate($status);
+            
+            $series->save();
+            
+            // Weird twist to keep storeSubElements relativly simple
+            $GLOBALS['pgirard']['manga']['hook']['SeriesController']['storeSubElements']['add'] = array($this, 'convertArtistsId');
+            $this->artistsToAdd = Input::get('artist');
+            $this->storeSubElements($series, 'authors', Input::get('author'), '\\Author', array('author' => 1));
+            unset($GLOBALS['pgirard']['manga']['hook']['SeriesController']['storeSubElements']['add']);
+            
+            $this->storeSubElements($series, 'artists', $this->artistsToAdd, '\\Author', array('artist' => 1));
+            $this->storeSubElements($series, 'countries', Input::get('country'), '\\Country');
+            $this->storeSubElements($series, 'editions', Input::get('editor'), '\\Editor');
+            $this->storeSubElements($series, 'genres', Input::get('genre'), '\\Genre');
+            $this->storeSubElements($series, 'types', Input::get('type'), '\\Type');
+            
+            return Redirect::action('SeriesController@show', array('id' => $series->id));
+        }
+    }
+        
+    protected function storeSubElements($mainObject, $attachFunction, $elements, $className, $pivotProperties = array()) {
+        if($elements) {
+            foreach($elements as $id) {
+                if (strpos($id, 'add') === 0) {
+                    $newObject = new $className();
+                    $newObject->name = substr($id, 3);
+                    $newObject->save();
+                    $mainObject->$attachFunction()->attach($newObject, $pivotProperties);
+                    if (isset($GLOBALS['pgirard']['manga']['hook']['SeriesController']['storeSubElements']['add'])) {
+                        call_user_func($GLOBALS['pgirard']['manga']['hook']['SeriesController']['storeSubElements']['add'], $newObject, $id);
+                    }
+                }
+                else {
+                    $object = $className::find($id);
+                    if ($object) {
+                        $mainObject->$attachFunction()->attach($object, $pivotProperties);
+                    }
+                }
+            }
+        }
+    }
+    
+    protected function convertArtistsId($newAuthor, $addId) {
+        if (($arrayId = array_search($addId, $this->artistsToAdd, true)) !== false) {
+            $this->artistsToAdd[$arrayId] = $newAuthor->id;
+        }
+    }
 }
