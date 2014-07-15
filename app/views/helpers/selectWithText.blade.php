@@ -2,14 +2,10 @@
     <label for="{{ $name }}" class="col-lg-2 control-label">
         {{ $label }}
     </label>
-    @if (count($options) > 0)
-        <div class="col-lg-5">
-            {{ Form::select($name, $options, null, array_merge(array('class' => 'form-control'), $select_box_attributes)) }}
-        </div>
-        <div class="col-lg-5">
-    @else
-        <div class="col-lg-10">
-    @endif
+    <div class="col-lg-5">
+        {{ Form::select($name, $options, $select_box_default, array_merge(array('class' => 'form-control'), $select_box_attributes)) }}
+    </div>
+    <div class="col-lg-5">
         {{ Form::text("new_$name", null, array('class' => 'form-control', 'placeholder' => 'Nouveau')) }}
         <a
             href=""

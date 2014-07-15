@@ -37,7 +37,7 @@
                 @else
                     <button type="submit" class="btn btn-success btn-lg btn-block loan-button">Prêter la série</button>
                 @endif
-
+                <a href="{{ URL::action('SeriesController@edit', array('id' => $series->id)) }}" class="btn btn-default btn-lg btn-block" type="button">Modifier</a>
             </div>
         </div>
         <h2>Liste des volumes</h2>
