@@ -123,6 +123,13 @@ class MangaController extends BaseController {
         }
     }
     
+    public function destroy($id) {
+        $manga = \Manga::find($id);
+        $series_id = $manga->series_id;
+        $manga->delete();
+        return Redirect::action('SeriesController@show', array('id' => $series_id));
+    }
+    
     public function image($id) {
         $manga = \Manga::find($id);
         if (is_object($manga)) {

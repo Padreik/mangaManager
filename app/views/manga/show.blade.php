@@ -15,6 +15,13 @@
             Modification réussi!
         </div>
     @endif
+    <div class="alert alert-danger delete-confirmation alert-dismissible" role="alert" style="display:none;">
+        <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        {{ Form::open(array('action' => array('MangaController@destroy', $manga->id), 'method' => 'delete')) }}
+            Voulez-vous vraiment supprimer ce manga?
+            <button type="submit" class="btn btn-danger btn-sm">Oui</button>
+        {{ Form::close() }}
+    </div>
     <div class="row">
         <div class="col-md-9 infosArray list-group">
             {{ DivAsArray::format("Prêté à", $manga->borrower ? $manga->borrower->name : "--") }}
@@ -32,6 +39,18 @@
                 <ul class="dropdown-menu dropdown-menu-right" role="menu">
                     <li>
                         <a href="{{ URL::action('MangaController@edit', array('id' => $manga->id)) }}">Modifier</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a href="" data-show="delete-confirmation">Supprimer</a>
+                        <script type="text/javascript">
+                            $('a[data-show]').click(function(e) {
+                                e.preventDefault();
+                                var name = $(this).data('show');
+                                $("."+name).show();
+                                window.scrollTo(0, 0);
+                            });
+                        </script>
                     </li>
                 </ul>
             </div>
