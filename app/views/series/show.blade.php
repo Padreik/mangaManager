@@ -6,6 +6,11 @@
 
 @section('header')
     {{ HTML::script('js/series.js') }}
+    <script type="text/javascript">
+        $(function () {
+            $('*[data-toggle=tooltip]').tooltip();
+        });
+    </script>
 @stop
 
 @section('content')
