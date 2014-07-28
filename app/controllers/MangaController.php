@@ -47,6 +47,7 @@ class MangaController extends BaseController {
             $manga->pages = intval(Input::get('pages'));
             $manga->ean = Input::get('ean');
             $manga->summary = Input::get('summary');
+            $manga->comment = Input::get('comment');
             $manga->source = Input::get('source') ? \ImportController::MANGA_URL.Input::get('source') : '';
             
             $imagePath = false;
@@ -102,6 +103,7 @@ class MangaController extends BaseController {
             $manga->pages = intval(Input::get('pages'));
             $manga->ean = Input::get('ean');
             $manga->summary = Input::get('summary');
+            $manga->comment = Input::get('comment');
             $manga->source = Input::get('source') ? \ImportController::MANGA_URL.Input::get('source') : '';
             
             $imagePath = false;

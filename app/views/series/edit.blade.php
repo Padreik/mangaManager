@@ -24,6 +24,7 @@
         {{ BootForm::text('Nombre de volumes VO', 'number_of_original_volumes') }}
         {{ BootForm::text('Âge recommendé', 'recommended_age') }}
         {{ \pgirardnet\Manga\Form\SelectWithText::init('Status', 'status', $status)->defaultOptions($series->status)->make() }}
+        {{ BootForm::textarea('Commentaire', 'comment') }}
         <div class="form-group {{ $errors->has('source') ? 'has-error' : '' }}">
             <label class="col-lg-2 control-label" for="source">Lien manganews</label>
             <div class="col-lg-10">
