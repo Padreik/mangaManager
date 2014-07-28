@@ -29,6 +29,7 @@
             {{ DivAsArray::format("Nombre de pages", $manga->pages) }}
             {{ DivAsArray::format("EAN", $manga->ean) }}
             {{ DivAsArray::format("Résumé", $manga->summary) }}
+            {{ DivAsArray::format("Commentaire", $manga->comment) }}
         </div>
         <div class="col-md-3 text-right">
             <img src="{{ URL::action('MangaController@image', array('id' => $manga->id)) }}" alt="{{ $manga->series->name }} Volume {{ $manga->number }}" class="series-show" />

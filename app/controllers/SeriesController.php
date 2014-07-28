@@ -57,6 +57,7 @@ class SeriesController extends BaseController {
             $series->number_of_volumes = intval(Input::get('number_of_volumes'));
             $series->number_of_original_volumes = intval(Input::get('number_of_original_volumes'));
             $series->recommended_age = intval(Input::get('recommended_age'));
+            $series->comment = Input::get('comment');
             $series->source = Input::get('source') ? \ImportController::SERIES_URL.Input::get('source') : '';
             
             $imagePath = false;
@@ -161,6 +162,7 @@ class SeriesController extends BaseController {
             $series->number_of_volumes = intval(Input::get('number_of_volumes'));
             $series->number_of_original_volumes = intval(Input::get('number_of_original_volumes'));
             $series->recommended_age = intval(Input::get('recommended_age'));
+            $series->comment = Input::get('comment');
             $series->source = Input::get('source') ? \ImportController::SERIES_URL.Input::get('source') : '';
             
             $imagePath = false;

@@ -32,6 +32,7 @@
         {{ BootForm::text('Nombre de pages', 'pages') }}
         {{ BootForm::text('EAN', 'ean') }}
         {{ BootForm::textarea('Résumé', 'summary') }}
+        {{ BootForm::textarea('Commentaire', 'comment') }}
         <div class="form-group {{ $errors->has('source') ? 'has-error' : '' }}">
             <label class="col-lg-2 control-label" for="source">Lien manganews</label>
             <div class="col-lg-10">
