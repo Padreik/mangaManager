@@ -24,7 +24,8 @@ Route::post('import/manga', 'ImportController@mangaSave');
 Route::resource('series', 'SeriesController');
 Route::get('series/{id}/image', 'SeriesController@image');
 
-Route::resource('manga', 'MangaController');
+Route::resource('manga', 'MangaController', array('except' => array('create')));
+Route::get('manga/create/{series_id}', 'MangaController@create');
 Route::get('manga/{id}/image', 'MangaController@image');
 
 Route::get('loan/history', 'LoanController@history');

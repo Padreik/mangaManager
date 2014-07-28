@@ -68,7 +68,14 @@
                 </div>
             </div>
         </div>
-        <h2>Liste des volumes</h2>
+        <h2>
+            Liste des volumes
+            <small>
+                <a href="{{ URL::action('MangaController@create', array('series_id' => $series->id)) }}" class="green-link">
+                    <span class="glyphicon glyphicon-plus-sign"></span><span class="sr-only">Ajouter un manga</span>
+                </a>
+            </small>
+        </h2>
         <div class="series-list">
             <?php
                 $i = 0;
