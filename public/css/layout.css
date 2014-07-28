@@ -62,3 +62,22 @@ a.green-link:hover {
 .settings-button {
     margin-top: 10px;
 }
+
+.rating-wrapper {
+    background-image: url(../images/VK10-nb.png);
+    background-size: 200px 20px;
+    background-repeat: no-repeat;
+    display: block;
+    width: 200px;
+}
+
+.rating {
+    background-image: url(../images/VK10-couleur.png);
+    background-size: 200px 20px;
+    background-repeat: no-repeat;
+    display: block;
+    
+    text-indent: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+}

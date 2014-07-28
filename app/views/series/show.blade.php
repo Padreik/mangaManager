@@ -36,6 +36,11 @@
                 {{ DivAsArray::format("Âge recommendé", $series->recommended_age) }}
                 {{ DivAsArray::format("Status", $series->status->name) }}
                 {{ DivAsArray::format("Commentaire", $series->comment) }}
+                <?php
+                    $ratingInPourcentage = $series->rating * 10;
+                    $ratingOnTen = round($series->rating, 1);
+                ?>
+                {{ DivAsArray::format("Note", "<span class='rating-wrapper' data-toggle='tooltip' title='$ratingOnTen/10'><span class='rating' style='width:$ratingInPourcentage%'>{$series->rating}</span></span>") }}
                 {{ DivAsArray::formatBorrowersForSeries("Prèté à", $series->mangas) }}
             </div>
             <div class="col-md-3 text-right">

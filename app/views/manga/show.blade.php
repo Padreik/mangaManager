@@ -8,6 +8,14 @@
     {{ HTML::linkAction('SeriesController@show', $manga->series->name, array('id' => $manga->series->id)) }} - {{ $manga->nameToDisplay }}
 @stop
 
+@section('header')
+    <script type="text/javascript">
+        $(function () {
+            $('*[data-toggle=tooltip]').tooltip();
+        });
+    </script>
+@stop
+
 @section('content')
     @if(Session::has('edit_success'))
         <div class="alert alert-success alert-dismissible" role="alert">
@@ -30,6 +38,8 @@
             {{ DivAsArray::format("EAN", $manga->ean) }}
             {{ DivAsArray::format("Résumé", $manga->summary) }}
             {{ DivAsArray::format("Commentaire", $manga->comment) }}
+            <?php $ratingInPourcentage = $manga->rating * 10; ?>
+            {{ DivAsArray::format("Note", "<span class='rating-wrapper' data-toggle='tooltip' title='{$manga->rating}/10'><span class='rating' style='width:$ratingInPourcentage%'>{$manga->rating}</span></span>") }}
         </div>
         <div class="col-md-3 text-right">
             <img src="{{ URL::action('MangaController@image', array('id' => $manga->id)) }}" alt="{{ $manga->series->name }} Volume {{ $manga->number }}" class="series-show" />
