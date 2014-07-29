@@ -38,6 +38,7 @@ Route::put('cart/{id}', 'LoanCartController@add');
 Route::post('cart/{id}', 'LoanCartController@update');
 Route::delete('cart/{id}', 'LoanCartController@remove');
 
+Route::get('stats', 'StatController@index');
 
 
 

@@ -75,6 +75,9 @@
                             </li>
                         </ul>
                     </li>
+                    <li>
+                        {{ HTML::linkAction('StatController@index', 'Statistiques') }}
+                    </li>
                 </ul>
                 <ul class="nav navbar-nav pull-right">
                     <li>
