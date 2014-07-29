@@ -31,6 +31,7 @@ class MangaController extends BaseController {
             'pages' => 'integer',
             'ean' => 'integer',
             'number_of_books' => 'required|integer',
+            'price' => 'required|regex:/^\d+([\.,]\d{0,2})?$/',
             'image_upload' => 'image',
             'image_url' => 'url|link_is_image',
         );
@@ -38,7 +39,7 @@ class MangaController extends BaseController {
         $validator = Validator::make(Input::all(), $validationRules);
         if ($validator->fails()) {
             Input::flash();
-            return Redirect::action('MangaController@create')->withErrors($validator);
+            return Redirect::action('MangaController@create', array('series_id' => Input::get('series_id')))->withErrors($validator);
         }
         else {
             $manga = new \Manga();
@@ -51,6 +52,7 @@ class MangaController extends BaseController {
             $manga->summary = Input::get('summary');
             $manga->comment = Input::get('comment');
             $manga->rating = Input::get('rating');
+            $manga->price = str_replace(',', '.', Input::get('price'));
             $manga->source = Input::get('source') ? \ImportController::MANGA_URL.Input::get('source') : '';
             
             $imagePath = false;
@@ -90,6 +92,7 @@ class MangaController extends BaseController {
             'pages' => 'integer',
             'ean' => 'integer',
             'number_of_books' => 'required|integer',
+            'price' => 'required|regex:/^\d+([\.,]\d{0,2})?$/',
             'image_upload' => 'image',
             'image_url' => 'url|link_is_image',
         );
@@ -110,6 +113,7 @@ class MangaController extends BaseController {
             $manga->summary = Input::get('summary');
             $manga->comment = Input::get('comment');
             $manga->rating = Input::get('rating');
+            $manga->price = str_replace(',', '.', Input::get('price'));
             $manga->source = Input::get('source') ? \ImportController::MANGA_URL.Input::get('source') : '';
             
             $imagePath = false;

@@ -35,6 +35,7 @@
         {{ BootForm::textarea('Commentaire', 'comment') }}
         {{ BootForm::select('Note', 'rating', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) }}
         {{ BootForm::text('Nombre de copies', 'number_of_books', '1') }}
+        {{ BootForm::text('Coût', 'price')->defaultValue('0,00') }}
         <div class="form-group {{ $errors->has('source') ? 'has-error' : '' }}">
             <label class="col-lg-2 control-label" for="source">Lien manganews</label>
             <div class="col-lg-10">

@@ -42,6 +42,7 @@
             {{ DivAsArray::format("Note", "<span class='rating-wrapper' data-toggle='tooltip' title='{$manga->rating}/10'><span class='rating' style='width:$ratingInPourcentage%'>{$manga->rating}</span></span>") }}
             {{ DivAsArray::format("Lu par", implode($manga->readBy, ', ')) }}
             {{ DivAsArray::format("Nombre de copies", $manga->number_of_books) }}
+            {{ DivAsArray::format("Coût", number_format($manga->price, 2, ',', ' ')." $") }}
         </div>
         <div class="col-md-3 text-right">
             <img src="{{ URL::action('MangaController@image', array('id' => $manga->id)) }}" alt="{{ $manga->series->name }} Volume {{ $manga->number }}" class="series-show" />
