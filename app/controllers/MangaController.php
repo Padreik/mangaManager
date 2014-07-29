@@ -2,9 +2,28 @@
 
 class MangaController extends BaseController {
     
-    public function index($series_id) {
-        $series = \Series::find($series_id);
-        return View::make('manga.index')->with('mangas', $series->mangas);
+    public function index() {
+        if (Input::has('read') && intval(Input::get('read') > -1)) {
+            $borrower = \Borrower::find(intval(Input::get('read')));
+            $subtitle = 'Lu par: '.$borrower->name;
+            $series = array();
+            foreach ($borrower->loans as $loan) {
+                foreach ($loan->mangas as $manga) {
+                    if (!isset($series[$manga->series_id])) {
+                        $series[$manga->series_id] = array(
+                            'series' => $manga->series,
+                            'mangas' => array()
+                        );
+                    }
+                    $series[$manga->series_id]['mangas'][$manga->id] = $manga;
+                }
+            }
+        }
+        else {
+            $series = array();
+            $subtitle = 'Erreur';
+        }
+        return View::make('manga.index')->with('series', $series)->with('subtitle', $subtitle);
     }
     
     public function show($id) {
@@ -150,5 +169,12 @@ class MangaController extends BaseController {
             $response->header('Content-Type', $matches[1]);
             return $response;
         }
+    }
+    
+    public function search() {
+        $includes = array(
+            'borrowers' => \Borrower::orderby('name')->lists('name', 'id'),
+        );
+        return View::make('manga.search')->with($includes);
     }
 }
