@@ -30,6 +30,7 @@ class MangaController extends BaseController {
             'date' => 'date',
             'pages' => 'integer',
             'ean' => 'integer',
+            'number_of_books' => 'required|integer',
             'image_upload' => 'image',
             'image_url' => 'url|link_is_image',
         );
@@ -46,6 +47,7 @@ class MangaController extends BaseController {
             $manga->parution = Input::get('parution');
             $manga->pages = intval(Input::get('pages'));
             $manga->ean = Input::get('ean');
+            $manga->number_of_books = intval(Input::get('number_of_books'));
             $manga->summary = Input::get('summary');
             $manga->comment = Input::get('comment');
             $manga->rating = Input::get('rating');
@@ -87,6 +89,7 @@ class MangaController extends BaseController {
             'date' => 'date',
             'pages' => 'integer',
             'ean' => 'integer',
+            'number_of_books' => 'required|integer',
             'image_upload' => 'image',
             'image_url' => 'url|link_is_image',
         );
@@ -94,7 +97,7 @@ class MangaController extends BaseController {
         $validator = Validator::make(Input::all(), $validationRules);
         if ($validator->fails()) {
             Input::flash();
-            return Redirect::action('MangaController@edit')->withErrors($validator);
+            return Redirect::action('MangaController@edit', array('id' => $id))->withErrors($validator);
         }
         else {
             $manga = \Manga::find($id);
@@ -103,6 +106,7 @@ class MangaController extends BaseController {
             $manga->parution = Input::get('parution');
             $manga->pages = intval(Input::get('pages'));
             $manga->ean = Input::get('ean');
+            $manga->number_of_books = intval(Input::get('number_of_books'));
             $manga->summary = Input::get('summary');
             $manga->comment = Input::get('comment');
             $manga->rating = Input::get('rating');
