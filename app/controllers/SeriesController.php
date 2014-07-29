@@ -3,7 +3,21 @@
 class SeriesController extends BaseController {
     
     public function index() {
-        return View::make('series.index')->with('series', \Series::orderBy('name')->get());
+        if (Input::has('author') && intval(Input::get('author') > -1)) {
+            $author = \Author::find(intval(Input::get('author')));
+            $subtitle = 'Auteur: '.$author->name;
+            $series = $author->series();
+        }
+        elseif (Input::has('genre') && intval(Input::get('genre') > -1)) {
+            $genre = \Genre::find(intval(Input::get('genre')));
+            $subtitle = 'Genre: '.$genre->name;
+            $series = $genre->series();
+        }
+        else {
+            $series = \Series::orderBy('name');
+            $subtitle = '';
+        }
+        return View::make('series.index')->with('series', $series->get())->with('subtitle', $subtitle);
     }
     
     public function show($id) {
@@ -230,5 +244,13 @@ class SeriesController extends BaseController {
     public function destroy($id) {
         \Series::destroy($id);
         return Redirect::action('SeriesController@index');
+    }
+    
+    public function search() {
+        $includes = array(
+            'authors' => \Author::orderby('name')->lists('name', 'id'),
+            'genres' => \Genre::orderby('name')->lists('name', 'id'),
+        );
+        return View::make('series.search')->with($includes);
     }
 }

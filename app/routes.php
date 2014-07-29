@@ -21,9 +21,11 @@ Route::post('import/series', 'ImportController@seriesSave');
 Route::get('import/manga', 'ImportController@manga');
 Route::post('import/manga', 'ImportController@mangaSave');
 
+Route::get('series/search', 'SeriesController@search');
 Route::resource('series', 'SeriesController');
 Route::get('series/{id}/image', 'SeriesController@image');
 
+Route::get('manga/search', 'MangaController@search');
 Route::resource('manga', 'MangaController', array('except' => array('create')));
 Route::get('manga/create/{series_id}', 'MangaController@create');
 Route::get('manga/{id}/image', 'MangaController@image');

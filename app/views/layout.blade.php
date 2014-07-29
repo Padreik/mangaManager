@@ -78,6 +78,17 @@
                     <li>
                         {{ HTML::linkAction('StatController@index', 'Statistiques') }}
                     </li>
+                    <li class='dropdown'>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Recherche <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                {{ HTML::linkAction('SeriesController@search', 'Séries') }}
+                            </li>
+                            <li>
+                                {{ HTML::linkAction('MangaController@search', 'Mangas') }}
+                            </li>
+                        </ul>
+                    </li>
                 </ul>
                 <ul class="nav navbar-nav pull-right">
                     <li>

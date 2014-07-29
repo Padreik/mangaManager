@@ -14,6 +14,9 @@
 @stop
 
 @section('content')
+    @if ($subtitle)
+        <h2>{{ $subtitle; }}</h2>
+    @endif
     <div class="series-list">
         <?php
             $i = 0;
