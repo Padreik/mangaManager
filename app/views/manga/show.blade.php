@@ -40,6 +40,7 @@
             {{ DivAsArray::format("Commentaire", $manga->comment) }}
             <?php $ratingInPourcentage = $manga->rating * 10; ?>
             {{ DivAsArray::format("Note", "<span class='rating-wrapper' data-toggle='tooltip' title='{$manga->rating}/10'><span class='rating' style='width:$ratingInPourcentage%'>{$manga->rating}</span></span>") }}
+            {{ DivAsArray::format("Lu par", implode($manga->readBy, ', ')) }}
         </div>
         <div class="col-md-3 text-right">
             <img src="{{ URL::action('MangaController@image', array('id' => $manga->id)) }}" alt="{{ $manga->series->name }} Volume {{ $manga->number }}" class="series-show" />

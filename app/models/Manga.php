@@ -9,6 +9,20 @@ class Manga extends Eloquent {
         return $this->belongsTo('Borrower');
     }
     
+    public function loans() {
+        return $this->belongsToMany('Loan');
+    }
+    
+    public function getReadByAttribute() {
+        $reader = array();
+        foreach ($this->loans as $loan) {
+            if (!isset($reader[$loan->borrower->id])) {
+                $reader[$loan->borrower->id] = $loan->borrower->name;
+            }
+        }
+        return $reader;
+    }
+    
     public function getNameToDisplayAttribute() {
         if ($this->number == 0) {
             return $this->name;
